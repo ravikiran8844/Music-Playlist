@@ -93,7 +93,11 @@ class App extends React.Component {
   state = {tracksList: initialTracksList, searchItem: ''}
 
   getSearchItem = e => {
-    this.setState({searchItem: e.target.value})
+    const {tracksList} = this.state
+    const filteredItems = initialTracksList.filter(each =>
+      each.name.toLowerCase().includes(e.target.value.toLowerCase()),
+    )
+    this.setState({searchItem: e.target.value, tracksList: filteredItems})
   }
 
   deleteItem = id => {
@@ -115,7 +119,7 @@ class App extends React.Component {
         </div>
         <div className="songsText">
           <div className="flexRow">
-            <p>Songs Playlist</p>
+            <h1>Songs Playlist</h1>
             <div className="searchContainer">
               <input
                 onChange={this.getSearchItem}
@@ -130,41 +134,37 @@ class App extends React.Component {
         <div className="songsContainer">
           {tracksList.length > 0 ? (
             <ul>
-              {tracksList
-                .filter(each =>
-                  each.name.toLowerCase().includes(searchItem.toLowerCase()),
-                )
-                .map(each => (
-                  <li key={each.id}>
-                    <div className="songItem">
-                      <div className="itemImgBox">
-                        <div>
-                          <img
-                            className="songImg"
-                            alt="track"
-                            src={each.imageUrl}
-                          />
-                        </div>
-                        <div>
-                          <p>{each.name}</p>
-                          <p>{each.genre}</p>
-                        </div>
+              {tracksList.map(each => (
+                <li key={each.id}>
+                  <div className="songItem">
+                    <div className="itemImgBox">
+                      <div>
+                        <img
+                          className="songImg"
+                          alt="track"
+                          src={each.imageUrl}
+                        />
                       </div>
                       <div>
-                        <p>{each.duration}</p>
-                        <div>
-                          <button
-                            testid="delete"
-                            type="button"
-                            onClick={() => this.deleteItem(each.id)}
-                          >
-                            <AiOutlineDelete />
-                          </button>
-                        </div>
+                        <p>{each.name}</p>
+                        <p>{each.genre}</p>
                       </div>
                     </div>
-                  </li>
-                ))}
+                    <div>
+                      <p>{each.duration}</p>
+                      <div>
+                        <button
+                          testid="delete"
+                          type="button"
+                          onClick={() => this.deleteItem(each.id)}
+                        >
+                          <AiOutlineDelete />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              ))}
             </ul>
           ) : (
             <p>No Songs Found</p>
